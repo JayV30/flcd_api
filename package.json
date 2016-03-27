@@ -19,9 +19,14 @@
   "author": "Jay Karlsven <jay@jpkarlsven.com>",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.13.4"
+    "body-parser": "^1.15.0",
+    "express": "^4.13.4",
+    "mongoose": "^4.4.10"
   },
   "devDependencies": {
-    "nodemon": "^1.9.1"
+    "chai": "^3.5.0",
+    "mocha": "^2.4.5",
+    "nodemon": "^1.9.1",
+    "supertest": "^1.2.0"
   }
 }

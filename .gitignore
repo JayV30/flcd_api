@@ -37,3 +37,8 @@ jspm_packages
 
 # Cloud 9 related files
 .c9/
+data
+mongod
+
+# Secrets for config
+secrets.json
