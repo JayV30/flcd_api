@@ -1,6 +1,7 @@
 var supertest = require("supertest");
 var chai = require("chai");
 var should = chai.should();
+var expect = chai.expect;
 var port = process.env.PORT || 3000;
 
 var server = supertest.agent("http://localhost:" + port);
@@ -11,6 +12,8 @@ describe("Base route", function() {
    it("should return status code 200", function(done) {
        server.get("/")
        .end(function(err, res) {
+           if (err) return done(err); 
+           expect(err).to.equal(null);
            res.status.should.equal(200);
            res.should.be.json;
            done();
@@ -20,6 +23,8 @@ describe("Base route", function() {
    it("should return a message", function(done) {
        server.get("/")
        .end(function(err, res) {
+           if (err) return done(err);
+           expect(err).to.equal(null);
            res.body.should.have.property("message");
            res.body.message.should.equal("Welcome to the Flash Card API");
            done();
@@ -28,10 +33,12 @@ describe("Base route", function() {
 });
 
 // Bad routes should give appropriate response
-describe("Route not found", function() {
+describe("Invalid Routes", function() {
    it("should return status code 404", function(done) {
        server.get("/popsicles")
        .end(function(err, res) {
+           if (err) return done(err);
+           expect(err).to.equal(null);
            res.status.should.equal(404);
            done();
        });
