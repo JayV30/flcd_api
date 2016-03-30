@@ -15,9 +15,16 @@ if (env === 'production') {
 
 var db = {};
 
-db.deck = sequelize.import(__dirname + '/lib/models/deck.js');
-db.user = sequelize.import(__dirname + '/lib/models/user.js');
+// Database
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
+
+// Models
+db.deck = sequelize.import(__dirname + '/lib/models/deck.js');
+db.user = sequelize.import(__dirname + '/lib/models/user.js');
+
+// Associations
+db.user.hasMany(db.deck);
+db.deck.belongsTo(db.user);
 
 module.exports = db;
