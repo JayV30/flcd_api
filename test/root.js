@@ -9,13 +9,13 @@ var server = supertest.agent("http://localhost:" + port);
 
 // reset the test db tables before and after running tests
 before(function(done) {
-    db.sequelize.sync({force:true}).then(function() {
+    db.sequelize.sync({force:true, match: /_test$/}).then(function() {
         done();
     });
 });
 
 after(function(done) {
-    db.sequelize.sync({force:true}).then(function() {
+    db.sequelize.sync({force:true, match: /_test$/}).then(function() {
         done();
     });
 });

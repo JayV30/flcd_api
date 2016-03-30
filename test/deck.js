@@ -238,25 +238,5 @@ describe("Deck Routes", function() {
         });
         
     }); // PUT /decks/:id
-    
-    describe("DELETE /decks/:id", function() {
-        
-        it("should delete a single deck", function(done) {
-            server.delete("/decks/1").expect(204).end(function(err, res) {
-                if (err) return done(err);
-                expect(err).to.equal(null);
-                done();
-            });
-        });
-        
-        it("should return 404 if no deck found", function(done) {
-            server.delete("/decks/55").expect(404).end(function(err, res) {
-                if (err) return done(err);
-                expect(err).to.equal(null);
-                done();
-            });
-        });
-        
-    }); // DELETE /decks/:id
 
 }); // Deck Routes
