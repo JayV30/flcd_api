@@ -4,7 +4,21 @@ var should = chai.should();
 var expect = chai.expect;
 var port = process.env.PORT || 3000;
 
+var db = require('../db.js');
 var server = supertest.agent("http://localhost:" + port);
+
+// reset the test db tables before and after running tests
+before(function(done) {
+    db.sequelize.sync({force:true}).then(function() {
+        done();
+    });
+});
+
+after(function(done) {
+    db.sequelize.sync({force:true}).then(function() {
+        done();
+    });
+});
 
 // API entry point behavior
 describe("Base route", function() {
