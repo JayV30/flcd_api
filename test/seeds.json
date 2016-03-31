@@ -51,6 +51,9 @@
             "username": "ValidUser",
             "email": "test@testing.edu",
             "password": "123ab"
+        },
+        "updatedUsername": {
+            "username": "UpdatedUser"
         }
     },
     "deck": {

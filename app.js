@@ -20,7 +20,8 @@ router.route('/users')
       .post(controller.user.create);
 
 router.route('/users/:id')
-      .get(controller.user.getOne);
+      .get(controller.user.getOne)
+      .put(controller.user.updateOne);
       
 // Deck endpoints
 router.route('/decks')
