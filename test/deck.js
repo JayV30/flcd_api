@@ -9,8 +9,7 @@ var server = supertest.agent("http://localhost:" + port);
 var validPost = {
     "title": "Title",
     "category": "Category",
-    "description": "Description",
-    "visible": true
+    "description": "Description"
 };
 
 describe("Deck Routes", function() {
@@ -25,7 +24,7 @@ describe("Deck Routes", function() {
                 res.body.title.should.equal(validPost.title);
                 res.body.category.should.equal(validPost.category);
                 res.body.description.should.equal(validPost.description);
-                res.body.visible.should.equal(validPost.visible);
+                res.body.visible.should.equal(true);
                 res.body.should.have.property('id');
                 res.body.should.have.property('createdAt');
                 res.body.should.have.property('updatedAt');

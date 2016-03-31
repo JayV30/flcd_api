@@ -18,6 +18,9 @@ app.use(bodyParser.json());
 // User endpoints
 router.route('/users')
       .post(controller.user.create);
+
+router.route('/users/:id')
+      .get(controller.user.getOne);
       
 // Deck endpoints
 router.route('/decks')

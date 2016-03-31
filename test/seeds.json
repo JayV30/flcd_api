@@ -1,0 +1,63 @@
+{
+    "user": {
+        "valid": {
+            "username": "ValidUser",
+            "email": "test@testing.edu",
+            "password": "123abc"
+        },
+        "valid2": {
+            "username": "ValidUser2",
+            "email": "test2@testing.com",
+            "password": "abc123"
+        },
+        "blankUsername": {
+            "username": "",
+            "email": "test@testing.edu",
+            "password": "123abc"
+        },
+        "noUsername": {
+            "email": "test@testing.edu",
+            "password": "123abc"
+        },
+        "blankEmail": {
+            "username": "ValidUser",
+            "email": "",
+            "password": "123abc"
+        },
+        "noEmail": {
+            "username": "ValidUser",
+            "password": "123abc"
+        },
+        "invalidEmail": {
+            "username": "ValidUser",
+            "email": "test@testing",
+            "password": "123abc"
+        },
+        "invalidEmail2": {
+            "username": "ValidUser",
+            "email": "test.test.io",
+            "password": "123abc"
+        },
+        "blankPassword": {
+            "username": "ValidUser",
+            "email": "test@testing.edu",
+            "password": ""
+        },
+        "noPassword": {
+            "username": "ValidUser",
+            "email": "test@testing.edu"
+        },
+        "shortPassword": {
+            "username": "ValidUser",
+            "email": "test@testing.edu",
+            "password": "123ab"
+        }
+    },
+    "deck": {
+        "valid": {
+            "title": "Title",
+            "category": "Category",
+            "description": "Description"
+        }
+    }
+}
