@@ -360,4 +360,38 @@ describe('User Routes', function() {
         });
     }); // PUT /users/:id
     
+    describe('DELETE /users/:id', function() {
+        
+        it('should delete a user and return 204 no content', function(done) {
+            server.delete('/users/1').expect(204).end(function(err, res) {
+                if (err) return done(err);
+                expect(err).to.equal(null);
+                // check the db
+                server.get('/users/1').expect(404).end(function(err,res) {
+                    if (err) return done(err);
+                    expect(err).to.equal(null);
+                    done();
+                });
+            });
+        });
+        
+        it('should only allow authenticated user to delete', function(done) {
+            expect(true).to.equal(false); // auto-fail
+            done(); // authentication not yet implemented
+        });
+        
+        it('should not allow authenticated user to delete another user', function(done) {
+            expect(true).to.equal(false); // auto-fail
+            done(); // authentication not yet implemented
+        });
+        
+        it('should return 404 if no user found', function(done) {
+            server.delete('/users/55').expect(404).end(function(err, res) {
+                if (err) return done(err);
+                expect(err).to.equal(null);
+                done();
+            });
+        });
+    }); // DELETE /users/:id
+    
 }); // User Routes

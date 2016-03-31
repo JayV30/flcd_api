@@ -21,7 +21,8 @@ router.route('/users')
 
 router.route('/users/:id')
       .get(controller.user.getOne)
-      .put(controller.user.updateOne);
+      .put(controller.user.updateOne)
+      .delete(controller.user.deleteOne);
       
 // Deck endpoints
 router.route('/decks')
