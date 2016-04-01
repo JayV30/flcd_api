@@ -164,6 +164,20 @@ describe('User Routes', function() {
             });
         });
         
+        it('should only accept declared model properties', function(done) {
+            server.post('/users').send(user.extraProperties).expect(201).end(function(err, res) {
+                if (err) return done(err);
+                expect(err).to.equal(null);
+                res.body.should.be.json;
+                res.body.should.have.property('id');
+                res.body.should.have.property('createdAt');
+                res.body.should.have.property('updatedAt');
+                res.body.should.not.have.property('rejectMe');
+                res.body.should.not.have.property('rejectMeAlso');
+                done();
+            });
+        });
+        
     }); // POST /users
     
     describe('GET /users/:id', function() {

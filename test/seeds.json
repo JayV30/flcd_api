@@ -54,13 +54,71 @@
         },
         "updatedUsername": {
             "username": "UpdatedUser"
+        },
+        "extraProperties": {
+            "username": "ValidUser3",
+            "email": "test3@testing.com",
+            "password": "abc123",
+            "rejectMe": "This is not a valid property",
+            "rejectMeAlso": "Neither is this"
         }
     },
     "deck": {
         "valid": {
-            "title": "Title",
-            "category": "Category",
-            "description": "Description"
+            "title": "ValidDeck",
+            "category": "Programming",
+            "description": "Node.js flashcards"
+        },
+        "valid2": {
+            "title": "ValidDeck2",
+            "category": "Programming",
+            "description": "JavaScript flashcards"
+        },
+        "blankTitle": {
+            "title": "",
+            "category": "Programming",
+            "description": "Node.js flashcards"
+        },
+        "noTitle": {
+            "category": "Programming",
+            "description": "Node.js flashcards"
+        },
+        "blankCategory": {
+            "title": "ValidDeck",
+            "category": "",
+            "description": "Node.js flashcards"
+        },
+        "noCategory": {
+            "title": "ValidDeck",
+            "description": "Node.js flashcards"
+        },
+        "blankDescription": {
+            "title": "ValidDeck3",
+            "category": "Social Studies",
+            "description": ""
+        },
+        "noDescription": {
+            "title": "ValidDeck4",
+            "category": "Programming"
+        },
+        "extraProperties": {
+            "title": "ValidDeck5",
+            "category": "Language",
+            "description": "French nouns",
+            "rejectMe": "This is not a valid property",
+            "rejectMeAlso": "Neither is this"
+        },
+        "notVisible": {
+            "title": "ValidDeck6",
+            "category": "Programming",
+            "description": "JavaScript flashcards",
+            "visible": false
+        },
+        "invalidVis": {
+            "title": "Invalid Deck",
+            "category": "Programming",
+            "description": "Booleans",
+            "visible": "invalid string"
         }
     }
 }
