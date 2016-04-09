@@ -74,6 +74,12 @@
             "category": "Programming",
             "description": "JavaScript flashcards"
         },
+        "nonsortedDeck": {
+            "title": "non-sorted",
+            "category": "none",
+            "description": "Cards which have not been assigned to a deck.",
+            "visible": false
+        },
         "blankTitle": {
             "title": "",
             "category": "Programming",

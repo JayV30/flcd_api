@@ -62,7 +62,7 @@ describe('Deck Routes', function() {
         });
         
         it('should reject null title', function(done) {
-            server.post("/decks").send(deck.noTitle).expect(400).end(function(err, res) {
+            server.post('/decks').send(deck.noTitle).expect(400).end(function(err, res) {
                 if (err) return done(err);
                 expect(err).to.equal(null);
                 res.body.name.should.equal('SequelizeValidationError');
@@ -148,18 +148,25 @@ describe('Deck Routes', function() {
                 done();
             });
         });
+        
+        it('should only allow creation of a deck titled \'non-sorted\' once per user', function(done) {
+           expect(true).to.equal(false); // auto-fail
+            done(); // authentication not yet impletmented
+        });
 
     }); // POST /decks
 
     describe("GET /decks", function() {
         
-        // add 2 visible:true decks and 1 visible:false deck
+        // add 2 visible:true decks, 1 visible:false, and 1 non-sorted deck
         before(function(done) {
             db.sequelize.sync({force:true, match: /_test$/}).then(function() {
                 server.post('/decks').send(deck.valid).then(function() {
                     server.post('/decks').send(deck.valid2).then(function() {
                         server.post('/decks').send(deck.notVisible).then(function() {
-                            done();
+                            server.post('/decks').send(deck.nonsortedDeck).then(function() {
+                               done(); 
+                            });
                         });
                     });
                 });
@@ -175,18 +182,32 @@ describe('Deck Routes', function() {
                 done();
             });
         });
+        
+        it('should not list any deck with a title of \'non-sorted\'', function(done) {
+            server.get('/decks').expect(200).end(function(err, res) {
+                if (err) return done(err);
+                expect(err).to.equal(null);
+                res.body.should.be.json;
+                res.body.forEach(function(entry) {
+                   entry.title.should.not.equal('non-sorted'); 
+                });
+                done();
+            });
+        });
 
     }); // GET /decks
 
     describe('GET /decks/:id', function() {
         
-        // add 2 visible:true decks and 1 visible:false deck
+        // add 2 visible:true decks, 1 visible:false, and 1 non-sorted deck
         before(function(done) {
             db.sequelize.sync({force:true, match: /_test$/}).then(function() {
                 server.post('/decks').send(deck.valid).then(function() {
                     server.post('/decks').send(deck.valid2).then(function() {
                         server.post('/decks').send(deck.notVisible).then(function() {
-                            done();
+                            server.post('/decks').send(deck.nonsortedDeck).then(function() {
+                               done(); 
+                            });
                         });
                     });
                 });
@@ -204,6 +225,11 @@ describe('Deck Routes', function() {
         });
         
         it('should not return a hidden deck unless authenticated user is the deck owner', function(done) {
+            expect(true).to.equal(false); // auto-fail
+            done(); // authentication not yet impletmented
+        });
+        
+        it('should not return a deck with title \'non-sorted\' unless authenticated user is the deck owner', function(done) {
             expect(true).to.equal(false); // auto-fail
             done(); // authentication not yet impletmented
         });
@@ -235,6 +261,11 @@ describe('Deck Routes', function() {
         });
         
         it('should not allow authenticated user to update another users deck', function(done) {
+            expect(true).to.equal(false); // auto-fail
+            done(); // authentication not yet impletmented
+        });
+        
+        it('should not allow modification of any users \'non-sorted\' deck', function(done) {
             expect(true).to.equal(false); // auto-fail
             done(); // authentication not yet impletmented
         });
@@ -305,6 +336,41 @@ describe('Deck Routes', function() {
     
     describe('DELETE /decks/:id', function() {
         
+        it('should delete a deck and return 204 no content', function(done) {
+            server.delete('/decks/1').expect(204).end(function(err, res) {
+                if (err) return done(err);
+                expect(err).to.equal(null);
+                // check the db
+                server.get('/decks/1').expect(404).end(function(err,res) {
+                    if (err) return done(err);
+                    expect(err).to.equal(null);
+                    done();
+                });
+            });
+        });
+        
+        it('should only allow authenticated user to delete', function(done) {
+            expect(true).to.equal(false); // auto-fail
+            done(); // authentication not yet implemented
+        });
+        
+        it('should not allow authenticated user to delete another users deck', function(done) {
+            expect(true).to.equal(false); // auto-fail
+            done(); // authentication not yet implemented
+        });
+        
+        it('should not allow deletion of any users \'non-sorted\' deck', function(done) {
+            expect(true).to.equal(false); // auto-fail
+            done(); // authentication not yet implemented
+        });
+        
+        it('should return 404 if no deck found', function(done) {
+            server.delete('/decks/55').expect(404).end(function(err, res) {
+                if (err) return done(err);
+                expect(err).to.equal(null);
+                done();
+            });
+        });
     }); // DELETE /decks/:id
 
 }); // Deck Routes

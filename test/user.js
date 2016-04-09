@@ -5,6 +5,7 @@ var should = chai.should();
 var expect = chai.expect;
 var port = process.env.PORT || 3000;
 var server = supertest.agent('http://localhost:' + port);
+var db = require('../db.js');
 
 // load test seeds
 var seeds = require('./seeds.json');
@@ -12,9 +13,15 @@ var user = seeds.user;
 
 describe('User Routes', function() {
     
+    before(function(done) {
+        db.sequelize.sync({force:true, match: /_test$/}).then(function() {
+            done();
+        });
+    });
+    
     describe('POST /users', function() {
         
-        it('should create a user when sent valid data', function(done) {
+        it('should create a user with a default deck when sent valid data', function(done) {
            server.post('/users').send(user.valid).expect(201).end(function(err, res) {
                 if (err) return done(err);
                 expect(err).to.equal(null);
@@ -25,7 +32,17 @@ describe('User Routes', function() {
                 res.body.should.have.property('id');
                 res.body.should.have.property('createdAt');
                 res.body.should.have.property('updatedAt');
-                done();
+                server.get('/decks/1').expect(200).end(function(err, res) {
+                    if (err) return done(err);
+                    expect(err).to.equal(null);
+                    res.body.should.be.json;
+                    res.body.userId.should.equal(1);
+                    res.body.title.should.equal('non-sorted');
+                    res.body.category.should.equal('none');
+                    res.body.description.should.equal('Cards which have not been assigned to a deck.');
+                    res.body.visible.should.equal(false);
+                    done();
+                });
            });
         });
         
