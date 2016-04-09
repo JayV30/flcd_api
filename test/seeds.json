@@ -119,6 +119,9 @@
             "category": "Programming",
             "description": "Booleans",
             "visible": "invalid string"
+        },
+        "updatedTitle": {
+            "title": "Updated Title"
         }
     }
 }

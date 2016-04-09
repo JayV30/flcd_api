@@ -178,10 +178,23 @@ describe('Deck Routes', function() {
 
     }); // GET /decks
 
-    describe("GET /decks/:id", function() {
+    describe('GET /decks/:id', function() {
+        
+        // add 2 visible:true decks and 1 visible:false deck
+        before(function(done) {
+            db.sequelize.sync({force:true, match: /_test$/}).then(function() {
+                server.post('/decks').send(deck.valid).then(function() {
+                    server.post('/decks').send(deck.valid2).then(function() {
+                        server.post('/decks').send(deck.notVisible).then(function() {
+                            done();
+                        });
+                    });
+                });
+            });
+        });
 
-        it("should get a single deck", function(done) {
-            server.get("/decks/1").expect(200).end(function(err, res) {
+        it('should get a single visible deck', function(done) {
+            server.get('/decks/1').expect(200).end(function(err, res) {
                 if (err) return done(err);
                 expect(err).to.equal(null);
                 res.body.should.be.json;
@@ -190,8 +203,13 @@ describe('Deck Routes', function() {
             });
         });
         
-        it("should return 404 if no deck found", function(done) {
-            server.get("/decks/55").expect(404).end(function(err, res) {
+        it('should not return a hidden deck unless authenticated user is the deck owner', function(done) {
+            expect(true).to.equal(false); // auto-fail
+            done(); // authentication not yet impletmented
+        });
+        
+        it('should return 404 if no deck found', function(done) {
+            server.get('/decks/55').expect(404).end(function(err, res) {
                 if (err) return done(err);
                 expect(err).to.equal(null);
                 done();
@@ -199,79 +217,94 @@ describe('Deck Routes', function() {
         });
     }); // GET /decks/:id
     
-    describe("PUT /decks/:id", function() {
+    describe('PUT /decks/:id', function() {
         
-        it("should update a single deck when sent valid data", function(done) {
-            server.put("/decks/1").send({
-                "title": "Updated Title"
-            }).expect(200).end(function(err, res) {
+        it('should update properties and return the deck', function(done) {
+            server.put('/decks/1').send(deck.updatedTitle).expect(200).end(function(err, res) {
                 if (err) return done(err);
                 expect(err).to.equal(null);
                 res.body.should.be.json;
-                res.body.title.should.equal("Updated Title");
+                res.body.title.should.equal(deck.updatedTitle.title);
                 done();
             });
         });
         
-        it("should reject invalid data", function(done) {
-            // empty object should not update anything
-            server.put("/decks/1").send({}).expect(200).end(function(err, res) {
+        it('should only allow authenticated user to update', function(done) {
+            expect(true).to.equal(false); // auto-fail
+            done(); // authentication not yet impletmented
+        });
+        
+        it('should not allow authenticated user to update another users deck', function(done) {
+            expect(true).to.equal(false); // auto-fail
+            done(); // authentication not yet impletmented
+        });
+        
+        it('empty object should not update any values', function(done) {
+            server.put('/decks/1').send({}).expect(200).end(function(err, res) {
                 if (err) return done(err);
                 expect(err).to.equal(null);
                 res.body.should.be.json;
+                res.body.title.should.not.equal('');
+                res.body.category.should.not.equal('');
+                res.body.description.should.not.equal('');
+                res.body.visible.should.not.equal('');
+                res.body.id.should.equal(1);
+                done();
             });
-            // empty title should not pass validation
-            server.put("/decks/1").send({
-                "title": ""
-            }).expect(400).end(function(err, res) {
+        });
+        
+        it('should reject blank title', function(done) {
+            server.put('/decks/1').send({title: deck.blankTitle.title}).expect(400).end(function(err, res) {
                 if (err) return done(err);
                 expect(err).to.equal(null);
-                res.body.name.should.equal("SequelizeValidationError");
+                res.body.name.should.equal('SequelizeValidationError');
                 res.body.errors[0].path.should.equal('title');
                 res.body.errors[0].type.should.equal('Validation error');
+                done();
             });
-            // empty category should not pass validation
-            server.put("/decks/1").send({
-                "category": ""
-            }).expect(400).end(function(err, res) {
+        });
+        
+        it('should reject blank category', function(done) {
+            server.put('/decks/1').send({category: deck.blankCategory.category}).expect(400).end(function(err, res) {
                 if (err) return done(err);
                 expect(err).to.equal(null);
-                res.body.name.should.equal("SequelizeValidationError");
+                res.body.name.should.equal('SequelizeValidationError');
                 res.body.errors[0].path.should.equal('category');
-                res.body.errors[0].type.should.equal('Validation error');
-            });
-            // empty description should not pass validation
-            server.put("/decks/1").send({
-                "description": ""
-            }).expect(400).end(function(err, res) {
-                if (err) return done(err);
-                expect(err).to.equal(null);
-                res.body.name.should.equal("SequelizeValidationError");
-                res.body.errors[0].path.should.equal('description');
                 res.body.errors[0].type.should.equal('Validation error');
                 done();
             });
         });
         
-        it("should only accept declared model properties", function(done) {
-            server.put("/decks/1").send({
-                "title": "Title",
-                "propToReject": "this one",
-                "anotherToReject": "this one also"
-            }).expect(200).end(function(err, res) {
+        it('should reject \'visible\' value that is not a boolean', function(done) {
+            server.put('/decks/1').send({visible: deck.invalidVis.visible}).expect(400).end(function(err, res) {
+                if (err) return done(err);
+                expect(err).to.equal(null);
+                res.body.name.should.equal('SequelizeDatabaseError');
+                done();
+            });
+        });
+        
+        it('should only accept declared model properties', function(done) {
+            server.put('/decks/1').send(deck.extraProperties).expect(200).end(function(err, res) {
                 if (err) return done(err);
                 expect(err).to.equal(null);
                 res.body.should.be.json;
                 res.body.should.have.property('id');
                 res.body.should.have.property('createdAt');
                 res.body.should.have.property('updatedAt');
-                res.body.should.not.have.property('propToReject');
-                res.body.should.not.have.property('anotherToReject');
-                res.body.title.should.equal("Title");
+                res.body.should.not.have.property('rejectMe');
+                res.body.should.not.have.property('rejectMeAlso');
+                res.body.title.should.equal(deck.extraProperties.title);
+                res.body.category.should.equal(deck.extraProperties.category);
+                res.body.description.should.equal(deck.extraProperties.description);
                 done();
             });
         });
         
     }); // PUT /decks/:id
+    
+    describe('DELETE /decks/:id', function() {
+        
+    }); // DELETE /decks/:id
 
 }); // Deck Routes
